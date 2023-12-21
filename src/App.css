@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+  padding: 1rem;
 }
 
 .App-logo {
@@ -36,3 +36,39 @@
     transform: rotate(360deg);
   }
 }
+
+
+.createField{
+      display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 10px;
+}
+
+
+.addField{
+  display: flex;
+    column-gap: 1rem;
+    align-items: center;
+}
+
+.add{
+  display: flex;
+  align-items: center;
+  cursor: pointer; ;
+}
+
+.options{
+  display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 10px;
+}
+
+.option{
+    display: flex;
+      column-gap: 1rem;
+      padding: 10px;
+        align-items: center;
+      }
+
