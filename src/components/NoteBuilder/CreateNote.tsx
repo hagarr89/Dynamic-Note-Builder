@@ -2,7 +2,7 @@ import { Button, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { IFiled, INote } from ".";
 import CreateFields from "./CretaeFields";
-
+import SchemaClient from "./SchemaClient";
 function CreateNote({
   initialValue,
   onSaveToLocal,
@@ -38,6 +38,9 @@ function CreateNote({
           name={"name"}
           onChange={(e) => handleChange(e)}
         />
+        {note?.fields?.length > 0 ? (
+          <SchemaClient fields={note?.fields} />
+        ) : null}
 
         <CreateFields
           fields={note?.fields ?? []}

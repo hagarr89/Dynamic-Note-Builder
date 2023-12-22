@@ -9,6 +9,8 @@ export const getSchemaByClient = (clientName: string) => {
             return kipuConfig;
         case 'Credible':
             return credibleConfig;
+        case 'Field':
+            return credibleConfig;
         default:
             return {}
     }
