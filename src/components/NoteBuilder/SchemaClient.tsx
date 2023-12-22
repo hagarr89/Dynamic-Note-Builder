@@ -1,46 +1,57 @@
-import { IFiled } from ".";
 import { useEffect, useState } from "react";
 import { MenuItem, Select } from "@mui/material";
-
+import { getSchemaByClient } from "../../utils/utils";
+import { IFiled } from ".";
 export interface IConfiguration {
-  fields: IOption;
+  [x: string]: string | undefined;
 }
-export interface IOption {
-  [x: string]: string;
+
+export enum config {
+  kipuConfig = "Kipu",
+  pceConfig = "PCE",
+  credibleConfig = "Credible",
 }
 
 function SchemaClient({ fields }: { fields: IFiled[] }) {
-  const [configurations, setConfigurations] = useState<IConfiguration>({
-    fields: {},
-  });
-  const options: IOption[] | [] = configurations?.fields ?? [];
+  const [configurations, setConfigurations] = useState<IConfiguration | null>(
+    null
+  );
+  console.log("configurations", configurations);
 
-  const [selectedConfiguration, setSelectedConfiguration] =
-    useState<string>("");
+  const options = Object.values(config);
+  const fieldMap = fields?.map((field) => {
+    const { key, title } = field;
+    return { [key]: title };
+  });
+
+  const [selectedConfiguration, setSelectedConfiguration] = useState<string>(
+    config["kipuConfig"]
+  );
+
+  console.log(
+    "fieldMap",
+    fieldMap,
+    "selectedConfiguration",
+    selectedConfiguration
+  );
+
+  const loadSchema = (selected: string) => {
+    const clienConfig = getSchemaByClient(selected);
+    setConfigurations({ ...clienConfig, ["fields"]: fieldMap });
+    setSelectedConfiguration(selected);
+  };
 
   useEffect(() => {
-    if (fields.length > 0) {
-      const updateConfigurations = fields?.map((field) => {
-        const { key, title } = field;
-        return { [key]: title };
-      });
-      setConfigurations({ fields: [...updateConfigurations] });
-      console.log(
-        "setSelectedConfiguration",
-        updateConfigurations,
-        Object.keys(updateConfigurations)
-      );
-      setSelectedConfiguration(Object.keys(updateConfigurations[0])[0]);
-    }
-  }, [fields]);
+    loadSchema(selectedConfiguration);
+  }, []);
 
   const handleChange = (e) => {
-    setSelectedConfiguration(e.target.value);
+    loadSchema(e.target.value);
   };
 
   return (
     <div className={"schemaClient"}>
-      {options && options?.length > 0 ? (
+      {options?.length > 0 ? (
         <Select
           defaultValue={selectedConfiguration}
           value={selectedConfiguration}
@@ -50,12 +61,10 @@ function SchemaClient({ fields }: { fields: IFiled[] }) {
           name={"key"}
           onChange={(e) => handleChange(e)}
         >
-          {options?.map((configuration: IOption) => {
-            const key = Object.keys(configuration)[0] as string;
-            const value = configuration[key as keyof IOption] as string;
+          {options?.map((option: string) => {
             return (
-              <MenuItem value={key} key={key}>
-                {value}
+              <MenuItem value={option} key={option}>
+                {option}
               </MenuItem>
             );
           })}
