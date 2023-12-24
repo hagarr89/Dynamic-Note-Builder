@@ -11,21 +11,26 @@ function CreateNote({
   onSaveToLocal?: (note: INote) => void;
 }) {
   const [note, setNote] = useState<INote>(initialValue);
+  const [fields, setFields] = useState<IFiled[] | []>(note?.fields ?? []);
 
   const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSaveToLocal && onSaveToLocal(note);
+    onSaveToLocal && onSaveToLocal({ ...note, ["fields"]: fields });
   };
   const handleChange = (e: any) => {
     setNote({ ...note, [e.target.name]: e.target.value });
   };
   const handelChangeFields = (fields: IFiled[]) => {
-    setNote({ ...note, fields: fields });
+    setFields(fields);
   };
 
   useEffect(() => {
     setNote(initialValue);
   }, [initialValue]);
+
+  useEffect(() => {
+    setFields(note?.fields);
+  }, [note]);
 
   return (
     <div className={"createNote"}>
@@ -39,12 +44,10 @@ function CreateNote({
           onChange={(e) => handleChange(e)}
         />
 
-        <SchemaClient fields={note?.fields} />
-
-        <CreateFields
-          fields={note?.fields ?? []}
-          onChangeFields={handelChangeFields}
-        />
+        <SchemaClient key={note?.fields?.length} fields={note?.fields} />
+        {fields?.length > 0 && (
+          <CreateFields fields={fields} onChangeFields={handelChangeFields} />
+        )}
         <Button type="submit" variant="text">
           Submit
         </Button>

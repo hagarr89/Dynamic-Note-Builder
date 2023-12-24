@@ -16,7 +16,6 @@ function SchemaClient({ fields }: { fields: IFiled[] }) {
   const [configurations, setConfigurations] = useState<IConfiguration | null>(
     null
   );
-
   const options = Object.values(config);
   const fieldMap = fields?.map((field) => {
     const { key, title } = field;
@@ -36,6 +35,10 @@ function SchemaClient({ fields }: { fields: IFiled[] }) {
   useEffect(() => {
     loadSchema(selectedConfiguration);
   }, [fields]);
+
+  useEffect(() => {
+    console.log("SchemaClient configurations", configurations);
+  }, [configurations]);
 
   const handleChange = (e) => {
     loadSchema(e.target.value);
