@@ -38,9 +38,8 @@ function CreateNote({
           name={"name"}
           onChange={(e) => handleChange(e)}
         />
-        {note?.fields?.length > 0 ? (
-          <SchemaClient fields={note?.fields} />
-        ) : null}
+
+        <SchemaClient fields={note?.fields} />
 
         <CreateFields
           fields={note?.fields ?? []}

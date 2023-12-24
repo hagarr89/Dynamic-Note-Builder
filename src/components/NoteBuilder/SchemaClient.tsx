@@ -16,7 +16,6 @@ function SchemaClient({ fields }: { fields: IFiled[] }) {
   const [configurations, setConfigurations] = useState<IConfiguration | null>(
     null
   );
-  console.log("configurations", configurations);
 
   const options = Object.values(config);
   const fieldMap = fields?.map((field) => {
@@ -28,13 +27,6 @@ function SchemaClient({ fields }: { fields: IFiled[] }) {
     config["kipuConfig"]
   );
 
-  console.log(
-    "fieldMap",
-    fieldMap,
-    "selectedConfiguration",
-    selectedConfiguration
-  );
-
   const loadSchema = (selected: string) => {
     const clienConfig = getSchemaByClient(selected);
     setConfigurations({ ...clienConfig, ["fields"]: fieldMap });
@@ -43,7 +35,7 @@ function SchemaClient({ fields }: { fields: IFiled[] }) {
 
   useEffect(() => {
     loadSchema(selectedConfiguration);
-  }, []);
+  }, [fields]);
 
   const handleChange = (e) => {
     loadSchema(e.target.value);
