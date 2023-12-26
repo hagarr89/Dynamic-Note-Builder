@@ -17,7 +17,7 @@ function CreateNote({
     e.preventDefault();
     onSaveToLocal && onSaveToLocal({ ...note, ["fields"]: fields });
   };
-  const handleChange = (e: any) => {
+  const handleChange = (e: { target: HTMLInputElement }) => {
     setNote({ ...note, [e.target.name]: e.target.value });
   };
   const handelChangeFields = (fields: IFiled[]) => {
@@ -41,7 +41,7 @@ function CreateNote({
           label={"name"}
           variant="outlined"
           name={"name"}
-          onChange={(e) => handleChange(e)}
+          onChange={(e) => handleChange}
         />
 
         <SchemaClient key={note?.fields?.length} fields={note?.fields} />

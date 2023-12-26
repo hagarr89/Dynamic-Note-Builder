@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { MenuItem, Select } from "@mui/material";
 import { getSchemaByClient } from "../../utils/utils";
 import { IFiled } from ".";
+
 export interface IConfiguration {
   [x: string]: string | undefined;
 }
@@ -37,10 +38,10 @@ function SchemaClient({ fields }: { fields: IFiled[] }) {
   }, [fields]);
 
   useEffect(() => {
-    console.log("SchemaClient configurations", configurations);
+    // console.log("SchemaClient configurations", configurations);
   }, [configurations]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     loadSchema(e.target.value);
   };
 
@@ -54,7 +55,7 @@ function SchemaClient({ fields }: { fields: IFiled[] }) {
           placeholder={"Configuation"}
           label="Type"
           name={"key"}
-          onChange={(e) => handleChange(e)}
+          onChange={(e) => handleChange}
         >
           {options?.map((option: string) => {
             return (
