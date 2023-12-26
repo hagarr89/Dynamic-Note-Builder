@@ -29,7 +29,7 @@ function SchemaClient({ fields }: { fields: IFiled[] }) {
 
   const loadSchema = (selected: string) => {
     const clienConfig = getSchemaByClient(selected);
-    setConfigurations({ ...clienConfig, ["fields"]: fieldMap });
+    setConfigurations({ ...clienConfig, [`${fields}`]: fieldMap });
     setSelectedConfiguration(selected);
   };
 
