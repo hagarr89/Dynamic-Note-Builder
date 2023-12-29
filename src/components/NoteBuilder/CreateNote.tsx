@@ -1,6 +1,6 @@
 import { Button, TextField } from "@mui/material";
 import React, { useEffect, useReducer, useState } from "react";
-import { IFiled, INote } from ".";
+import { INote } from ".";
 import CreateFields from "./CretaeFields";
 import SchemaClient from "./SchemaClient";
 import { fieldsReducer, FielddActionKind } from "../../reducers/fields";
@@ -13,12 +13,12 @@ function CreateNote({
   onSaveToLocal?: (note: INote) => void;
 }) {
   const [note, setNote] = useState<INote>(initialValue);
-  const initFeilds: IFiled[] | [] = note?.fields ?? [];
-  const [fields, dispatch] = useReducer(fieldsReducer, { fields: initFeilds });
+  const [fields, dispatch] = useReducer(fieldsReducer, {
+    fields: note?.fields,
+  });
   const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
-    console.log("handleSubmit fields: ", note, fields);
     e.preventDefault();
-    onSaveToLocal && onSaveToLocal({ ...note, ["fields"]: fields?.fields });
+    onSaveToLocal && onSaveToLocal({ ...note, fields: fields?.fields });
   };
   const handleChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
@@ -34,9 +34,9 @@ function CreateNote({
     if (fields?.fields?.length) return;
     dispatch({
       type: FielddActionKind.INIT_FIELDS,
-      payload: { fields: initFeilds },
+      payload: { fields: note?.fields },
     });
-  }, [note]);
+  }, [note, fields]);
 
   return (
     <div className={"createNote"}>
@@ -54,6 +54,7 @@ function CreateNote({
         <SchemaClient key={note?.fields?.length} fields={note?.fields} />
 
         <CreateFields fields={fields?.fields ?? []} dispatch={dispatch} />
+
         <Button type="submit" variant="text">
           Submit
         </Button>

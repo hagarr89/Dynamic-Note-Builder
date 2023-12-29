@@ -25,6 +25,14 @@ function CreateField({
       payload: { updateField },
     });
   };
+
+  const handelRemoveField = () => {
+    dispatch({
+      type: FielddActionKind?.DELETE_FIELD,
+      payload: { uuid: field.uuid },
+    });
+  };
+
   const handelAddOptions = () => {
     const prevOptions = field?.options ?? [];
     const updateField = {
@@ -34,13 +42,6 @@ function CreateField({
     dispatch({
       type: FielddActionKind.EDIT_FIELD,
       payload: { updateField },
-    });
-  };
-
-  const handelRemoveField = () => {
-    dispatch({
-      type: FielddActionKind?.DELETE_FIELD,
-      payload: { uuid: field.uuid },
     });
   };
 
@@ -62,6 +63,7 @@ function CreateField({
     });
     return updateOptions;
   };
+
   const handelRemoveOption = (uuid: string) => {
     const options = field?.options ?? [];
     const updateOptions = options?.filter((option) => option?.uuid !== uuid);
