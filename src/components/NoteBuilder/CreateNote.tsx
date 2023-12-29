@@ -1,8 +1,10 @@
 import { Button, TextField } from "@mui/material";
-import { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { IFiled, INote } from ".";
 import CreateFields from "./CretaeFields";
 import SchemaClient from "./SchemaClient";
+import { fieldsReducer, FielddActionKind } from "../../reducers/fields";
+
 function CreateNote({
   initialValue,
   onSaveToLocal,
@@ -11,17 +13,17 @@ function CreateNote({
   onSaveToLocal?: (note: INote) => void;
 }) {
   const [note, setNote] = useState<INote>(initialValue);
-  const [fields, setFields] = useState<IFiled[] | []>(note?.fields ?? []);
-
+  const initFeilds: IFiled[] | [] = note?.fields ?? [];
+  const [fields, dispatch] = useReducer(fieldsReducer, { fields: initFeilds });
   const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
+    console.log("handleSubmit fields: ", note, fields);
     e.preventDefault();
-    onSaveToLocal && onSaveToLocal({ ...note, ["fields"]: fields });
+    onSaveToLocal && onSaveToLocal({ ...note, ["fields"]: fields?.fields });
   };
-  const handleChange = (e: { target: HTMLInputElement }) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ): void => {
     setNote({ ...note, [e.target.name]: e.target.value });
-  };
-  const handelChangeFields = (fields: IFiled[]) => {
-    setFields(fields);
   };
 
   useEffect(() => {
@@ -29,7 +31,11 @@ function CreateNote({
   }, [initialValue]);
 
   useEffect(() => {
-    setFields(note?.fields);
+    if (fields?.fields?.length) return;
+    dispatch({
+      type: FielddActionKind.INIT_FIELDS,
+      payload: { fields: initFeilds },
+    });
   }, [note]);
 
   return (
@@ -37,17 +43,17 @@ function CreateNote({
       <form onSubmit={handleSubmit}>
         <TextField
           required
-          value={note?.name !== "" ? note.name : ""}
+          defaultValue={note?.name}
+          value={note?.name}
           label={"name"}
           variant="outlined"
           name={"name"}
-          onChange={(e) => handleChange}
+          onChange={handleChange}
         />
 
         <SchemaClient key={note?.fields?.length} fields={note?.fields} />
-        {fields?.length > 0 && (
-          <CreateFields fields={fields} onChangeFields={handelChangeFields} />
-        )}
+
+        <CreateFields fields={fields?.fields ?? []} dispatch={dispatch} />
         <Button type="submit" variant="text">
           Submit
         </Button>

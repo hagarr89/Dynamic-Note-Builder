@@ -4,41 +4,39 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 
 function CreateOption({
   option,
-  optionIndex,
   onChaneOption,
   onRemoveOption,
 }: {
   option: IOption;
-  optionIndex: number;
-  onChaneOption(newOption: IOption, optionIndex: number): void;
-  onRemoveOption(optionIndex: number): void;
+  onChaneOption(updateOption: IOption): void;
+  onRemoveOption(uuid: string): void;
 }) {
-  const handleChange = (e: any) => {
-    const newOption = { ...option, [e.target.name]: e.target.value };
-    onChaneOption(newOption, optionIndex);
+  const handleChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ): void => {
+    const updateOption = { ...option, [e.target.name]: e.target.value };
+    onChaneOption(updateOption);
   };
   const handelRemoveOption = () => {
-    onRemoveOption(optionIndex);
+    onRemoveOption(option.uuid);
   };
 
   return (
     <div className="option">
       <>
         <TextField
-          defaultValue={option.label !== "" ? option.label : null}
-          placeholder={option.label}
+          defaultValue={option?.label}
           variant="outlined"
           name="label"
           label={"label"}
-          onChange={(e) => handleChange(e)}
+          onChange={handleChange}
         />
         <TextField
-          defaultValue={option.value !== "" ? option.value : null}
-          placeholder={option.value}
+          defaultValue={option?.value}
           variant="outlined"
           name="value"
           label={"value"}
-          onChange={(e) => handleChange(e)}
+          onChange={handleChange}
         />
       </>
       <div className="remove" onClick={handelRemoveOption}>

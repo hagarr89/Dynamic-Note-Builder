@@ -56,6 +56,7 @@ const useFields = () => {
   // };
   return {
     fields,
+    setFields,
     addField,
     removeField,
     editField,

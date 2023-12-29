@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { MenuItem, Select } from "@mui/material";
+import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { getSchemaByClient } from "../../utils/utils";
 import { IFiled } from ".";
 
 export interface IConfiguration {
-  [x: string]: string | undefined;
+  [fields: string]: string | undefined;
 }
 
 export enum config {
@@ -18,9 +18,10 @@ function SchemaClient({ fields }: { fields: IFiled[] }) {
     null
   );
   const options = Object.values(config);
+
   const fieldMap = fields?.map((field) => {
-    const { key, title } = field;
-    return { [key]: title };
+    const { key, title } = field as IFiled;
+    return { [key as string]: title };
   });
 
   const [selectedConfiguration, setSelectedConfiguration] = useState<string>(
@@ -29,20 +30,24 @@ function SchemaClient({ fields }: { fields: IFiled[] }) {
 
   const loadSchema = (selected: string) => {
     const clienConfig = getSchemaByClient(selected);
-    setConfigurations({ ...clienConfig, [`${fields}`]: fieldMap });
-    setSelectedConfiguration(selected);
+
+    setConfigurations({
+      ...clienConfig,
+      fields: Object.assign({}, ...fieldMap),
+    });
   };
 
   useEffect(() => {
     loadSchema(selectedConfiguration);
-  }, [fields]);
+  }, [fields, selectedConfiguration]);
 
   useEffect(() => {
-    // console.log("SchemaClient configurations", configurations);
-  }, [configurations]);
+    console.log("SchemaClient configurations", configurations, fields);
+  }, [configurations, selectedConfiguration]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: SelectChangeEvent<string>): void => {
     loadSchema(e.target.value);
+    setSelectedConfiguration(e.target.value);
   };
 
   return (
@@ -50,12 +55,11 @@ function SchemaClient({ fields }: { fields: IFiled[] }) {
       {options?.length > 0 ? (
         <Select
           defaultValue={selectedConfiguration}
-          value={selectedConfiguration}
           required
           placeholder={"Configuation"}
           label="Type"
-          name={"key"}
-          onChange={(e) => handleChange}
+          name="key"
+          onChange={handleChange}
         >
           {options?.map((option: string) => {
             return (

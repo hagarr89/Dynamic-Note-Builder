@@ -1,49 +1,26 @@
-import { IFiled, FieldType } from ".";
+import { IFiled } from ".";
 import CreateField from "./CretaeField";
 import AddIcon from "@mui/icons-material/Add";
+import { FielddActionKind, Dispatch } from "../../reducers/fields";
 
 function CreateFields({
   fields,
-  onChangeFields,
+  dispatch,
 }: {
   fields: IFiled[] | [];
-  onChangeFields: (fields: IFiled[]) => void;
+  dispatch: Dispatch;
 }) {
   const addEmptyField = () => {
-    const emptyField = createEmptyField() as IFiled;
-    onChangeFields([...fields, emptyField]);
-  };
-  const createEmptyField = () => {
-    return {
-      key: "",
-      title: "",
-      type: FieldType.TextArea,
-    };
-  };
-
-  const handelChaneField = (newield: IFiled, index: number) => {
-    const updateFields = [...fields];
-    updateFields[index] = newield;
-    onChangeFields(updateFields);
-  };
-
-  const handelRemoveField = (fieldIndex: number) => {
-    const updateFields = [...fields];
-    updateFields.splice(fieldIndex, 1);
-    onChangeFields(updateFields);
+    dispatch({ type: FielddActionKind.ADD_FIELD });
   };
 
   return (
     <div className={"createField"}>
-      {fields?.map((field, fieldIndex) => (
-        <CreateField
-          key={fieldIndex}
-          fieldIndex={fieldIndex}
-          field={field}
-          onChaneField={handelChaneField}
-          onRemoveField={handelRemoveField}
-        />
-      ))}
+      {fields?.length
+        ? fields?.map((field) => (
+            <CreateField key={field?.uuid} field={field} dispatch={dispatch} />
+          ))
+        : null}
       <div onClick={addEmptyField} className="add">
         <AddIcon /> Add Field
       </div>
