@@ -31,12 +31,11 @@ function CreateNote({
   }, [initialValue]);
 
   useEffect(() => {
-    if (fields?.fields?.length) return;
     dispatch({
       type: FielddActionKind.INIT_FIELDS,
       payload: { fields: note?.fields },
     });
-  }, [note, fields]);
+  }, [note]);
 
   return (
     <div className={"createNote"}>
