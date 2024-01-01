@@ -43,7 +43,6 @@ function CreateNote({
         <TextField
           required
           defaultValue={note?.name}
-          value={note?.name}
           label={"name"}
           variant="outlined"
           name={"name"}
