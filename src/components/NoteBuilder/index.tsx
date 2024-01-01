@@ -6,15 +6,17 @@ export interface INote {
 }
 
 export interface IFiled {
-  key: string;
-  title: string;
+  uuid: string;
+  key: string | null;
+  title: string | null;
   type: FieldType;
   options?: IOption[];
 }
 
 export interface IOption {
-  label: string;
-  value: string;
+  label: string | null;
+  value: string | null;
+  uuid: string;
 }
 
 export enum FieldType {

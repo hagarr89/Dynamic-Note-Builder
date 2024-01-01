@@ -1,52 +1,77 @@
-import { MenuItem, Select, TextField } from "@mui/material";
+import { MenuItem, Select, TextField, SelectChangeEvent } from "@mui/material";
 import { FieldType, IFiled, IOption } from ".";
-import { useState } from "react";
+import { FielddActionKind, Dispatch, addOption } from "../../reducers/fields";
+
 import CreateOption from "./CreateOption";
 import AddIcon from "@mui/icons-material/Add";
+
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
 function CreateField({
   field,
-  fieldIndex,
-  onChaneField,
-  onRemoveField,
+  dispatch,
 }: {
   field: IFiled;
-  fieldIndex: number;
-  onChaneField: (newField: IFiled, index: number) => void;
-  onRemoveField: (fieldIndex: number) => void;
+  dispatch: Dispatch;
 }) {
-  const [options, setOptions] = useState<IOption[] | []>(field?.options ?? []);
-
-  const handleChange = (e: any) => {
-    const newField = { ...field, [e.target.name]: e.target.value };
-    onChaneField(newField, fieldIndex);
-  };
-
-  const addOption = () => {
-    const newOption = {
-      label: "",
-      value: "",
-    };
-    setOptions([...options, newOption]);
-  };
-
-  const handelChangeOptions = (newOption: IOption, optionIndex: number) => {
-    options[optionIndex] = newOption;
-    setOptions(options);
-
-    const newField = { ...field, options };
-    onChaneField(newField, fieldIndex);
+  const handleChange = (
+    e:
+      | React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+      | SelectChangeEvent
+  ): void => {
+    const updateField = { ...field, [e.target.name]: e.target.value } as IFiled;
+    dispatch({
+      type: FielddActionKind.EDIT_FIELD,
+      payload: { updateField },
+    });
   };
 
   const handelRemoveField = () => {
-    onRemoveField(fieldIndex);
+    dispatch({
+      type: FielddActionKind?.DELETE_FIELD,
+      payload: { uuid: field.uuid },
+    });
   };
-  const handelRemoveOption = (optionIndex: number) => {
-    const updateField = { ...field };
-    updateField?.options?.splice(optionIndex, 1);
-    if (updateField?.options) setOptions(updateField?.options);
-    onChaneField(updateField, fieldIndex);
+
+  const handelAddOptions = () => {
+    const prevOptions = field?.options ?? [];
+    const updateField = {
+      ...field,
+      options: [...prevOptions, addOption()],
+    };
+    dispatch({
+      type: FielddActionKind.EDIT_FIELD,
+      payload: { updateField },
+    });
+  };
+
+  const handelChangeOptions = (updateOption: IOption) => {
+    const updateOptions = handelUpdateOptions(updateOption);
+    const updateField = { ...field, options: updateOptions };
+    dispatch({
+      type: FielddActionKind.EDIT_FIELD,
+      payload: { updateField },
+    });
+  };
+  const handelUpdateOptions = (updateOption: IOption) => {
+    const options = field?.options ?? [];
+    const updateOptions = options?.map((option) => {
+      if (option?.uuid === updateOption?.uuid) {
+        return updateOption;
+      }
+      return option;
+    });
+    return updateOptions;
+  };
+
+  const handelRemoveOption = (uuid: string) => {
+    const options = field?.options ?? [];
+    const updateOptions = options?.filter((option) => option?.uuid !== uuid);
+    const updateField = { ...field, options: updateOptions };
+    dispatch({
+      type: FielddActionKind.EDIT_FIELD,
+      payload: { updateField },
+    });
   };
 
   return (
@@ -54,30 +79,27 @@ function CreateField({
       <div className="addField">
         <TextField
           required
-          defaultValue={field.key !== "" ? field.key : null}
-          placeholder={field.key}
+          defaultValue={field?.key}
           label={"key"}
           variant="outlined"
-          name={"key"}
-          onChange={(e) => handleChange(e)}
+          name="key"
+          onChange={handleChange}
         />
         <TextField
           required
-          defaultValue={field.title !== "" ? field.title : null}
-          placeholder={field.title}
+          defaultValue={field?.title}
           label={"title"}
           variant="outlined"
-          name={"title"}
-          onChange={(e) => handleChange(e)}
+          name="title"
+          onChange={handleChange}
         />
         <Select
           required
-          defaultValue={field.type}
-          placeholder={field.type}
-          value={field.type}
+          defaultValue={field?.type}
+          placeholder={field?.type}
           label="Type"
-          name={"type"}
-          onChange={(e) => handleChange(e)}
+          name="type"
+          onChange={handleChange}
         >
           <MenuItem value={FieldType["TextArea"]}>
             {FieldType["TextArea"]}
@@ -92,20 +114,21 @@ function CreateField({
         </div>
       </div>
 
-      {field.type !== FieldType.TextArea ? (
+      {field?.type !== FieldType.TextArea ? (
         <div className="options">
           <div>
-            {options?.map((option, optionIndex) => (
-              <CreateOption
-                key={optionIndex}
-                option={option}
-                optionIndex={optionIndex}
-                onChaneOption={handelChangeOptions}
-                onRemoveOption={handelRemoveOption}
-              />
-            ))}
+            {field?.options
+              ? field?.options?.map((option) => (
+                  <CreateOption
+                    key={option?.uuid}
+                    option={option}
+                    onChaneOption={handelChangeOptions}
+                    onRemoveOption={handelRemoveOption}
+                  />
+                ))
+              : null}
           </div>
-          <div className="add" onClick={addOption}>
+          <div className="add" onClick={handelAddOptions}>
             <AddIcon /> Add option
           </div>
         </div>
