@@ -1,24 +1,23 @@
 import { TextField } from "@mui/material";
 import { IOption } from ".";
+import { useFormContext } from "react-hook-form";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
 function CreateOption({
   option,
-  onChaneOption,
-  onRemoveOption,
+  optionIndex,
+  indexField,
+  onRemove,
 }: {
   option: IOption;
-  onChaneOption(updateOption: IOption): void;
-  onRemoveOption(uuid: string): void;
+  optionIndex: number;
+  indexField: number;
+  onRemove: () => void;
 }) {
-  const handleChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ): void => {
-    const updateOption = { ...option, [e.target.name]: e.target.value };
-    onChaneOption(updateOption);
-  };
+  const { register } = useFormContext(); // retrieve all hook methods
+
   const handelRemoveOption = () => {
-    onRemoveOption(option.uuid);
+    onRemove();
   };
 
   return (
@@ -27,16 +26,17 @@ function CreateOption({
         <TextField
           defaultValue={option?.label}
           variant="outlined"
-          name="label"
-          label={"label"}
-          onChange={handleChange}
+          {...register(`fields.${indexField}.options.${optionIndex}.label`, {
+            required: { value: true, message: "This field is requierd" },
+          })}
         />
         <TextField
           defaultValue={option?.value}
           variant="outlined"
-          name="value"
           label={"value"}
-          onChange={handleChange}
+          {...register(`fields.${indexField}.options.${optionIndex}.value`, {
+            required: { value: true, message: "This field is requierd" },
+          })}
         />
       </>
       <div className="remove" onClick={handelRemoveOption}>

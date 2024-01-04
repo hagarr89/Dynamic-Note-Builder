@@ -1,12 +1,11 @@
-import CreateNote from "./CreateNote";
-
+import Note from "./Note";
+import "./index.scss";
 export interface INote {
-  name: string;
+  name: string | null;
   fields: IFiled[];
 }
 
 export interface IFiled {
-  uuid: string;
   key: string | null;
   title: string | null;
   type: FieldType;
@@ -16,7 +15,6 @@ export interface IFiled {
 export interface IOption {
   label: string | null;
   value: string | null;
-  uuid: string;
 }
 
 export enum FieldType {
@@ -25,4 +23,4 @@ export enum FieldType {
   Radio = "radio",
 }
 
-export default CreateNote;
+export default Note;

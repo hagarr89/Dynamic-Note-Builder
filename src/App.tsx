@@ -1,4 +1,4 @@
-import "./App.css";
+import "./App.scss";
 import { INote } from "./components/NoteBuilder";
 import NoteBuilder from "./components/NoteBuilder";
 import { useState, useEffect } from "react";
@@ -6,7 +6,7 @@ import useLocalStorage from "./hooks/useLocalStorage";
 
 function App() {
   const [initialValue, setInitialValue] = useState<INote>({
-    name: "",
+    name: null,
     fields: [],
   });
   const [storedValue, setValue] = useLocalStorage<INote>("note", initialValue);

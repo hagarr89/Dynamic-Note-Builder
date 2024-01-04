@@ -1,0 +1,9 @@
+@import "./colors.scss";
+
+.App {
+  padding: 1rem;
+}
+.error {
+  color: $alert-color;
+  font-size: 0.75rem;
+}
