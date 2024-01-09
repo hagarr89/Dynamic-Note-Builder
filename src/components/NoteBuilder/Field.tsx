@@ -1,8 +1,6 @@
 import { MenuItem, Select, TextField } from "@mui/material";
-import { FieldType, IFiled, IOption } from ".";
+import { FieldType, IFiled } from ".";
 import Options from "./Options";
-import CreateOption from "./Option";
-import AddIcon from "@mui/icons-material/Add";
 
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { useFormContext, useWatch } from "react-hook-form";
@@ -22,7 +20,6 @@ function Field({
     control,
     name: `fields.${indexField}.type`,
   });
-  console.log("fieldChnged", fieldChnged, field?.key);
 
   const handelRemoveField = () => {
     onRemove();

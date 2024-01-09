@@ -15,10 +15,6 @@ function Fields() {
     control,
   });
 
-  useEffect(() => {
-    console.log("FIELDS UPDATED", fields);
-  }, [fields]);
-
   return (
     <div className={"Fields"}>
       {fields?.length

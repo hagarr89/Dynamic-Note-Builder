@@ -44,9 +44,8 @@ function Note({
         <form onSubmit={onSubmit}>
           <h1>Create Note Fields</h1>
           <TextField
-            variant="outlined"
-            defaultValue={note?.name}
             label="name"
+            variant="outlined"
             {...register("name", {
               required: { value: true, message: "This field is requierd" },
               minLength: { value: 3, message: "Please enter 3 chars minmum" },

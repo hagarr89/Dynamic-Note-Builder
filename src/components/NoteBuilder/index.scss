@@ -11,15 +11,18 @@
     gap: 1rem;
     padding: 10px 0;
   }
-  .Field {
-    display: flex;
-    column-gap: 1rem;
-    align-items: center;
+  .Field,
+  .option {
     &:hover {
       .remove {
         display: block;
       }
     }
+  }
+  .Field {
+    display: flex;
+    column-gap: 1rem;
+    align-items: center;
   }
   .remove {
     font-size: 0.875rem;
