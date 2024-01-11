@@ -18,14 +18,13 @@ function Options({ indexField }: { indexField: number }) {
         ? fields?.map((option, index) => (
             <Option
               key={option.id}
-              option={option}
               optionIndex={index}
               indexField={indexField}
               onRemove={() => remove(index)}
             />
           ))
         : null}
-      <div onClick={() => append({ label: null, value: null })} className="add">
+      <div onClick={() => append({ label: "", value: "" })} className="add">
         <AddIcon /> Add Option
       </div>
     </div>

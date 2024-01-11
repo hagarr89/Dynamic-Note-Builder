@@ -1,9 +1,9 @@
-import { Button, TextField } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Button } from "@mui/material";
+import React from "react";
 import { INote } from ".";
 import Fileds from "./Fields";
-import { useForm, FormProvider } from "react-hook-form";
-import { ErrorMessage } from "@hookform/error-message";
+import { useForm, FormProvider, Controller } from "react-hook-form";
+import TextArea from "../Inputes/TextArea";
 
 function Note({
   initialValue,
@@ -12,48 +12,38 @@ function Note({
   initialValue: INote;
   onSaveToLocal?: (note: INote) => void;
 }) {
-  const methods = useForm({
+  const methods = useForm<INote>({
     defaultValues: initialValue,
-    shouldUnregister: true,
   });
 
   const {
-    register,
     formState: { errors },
     handleSubmit,
-    reset,
+    control,
   } = methods;
 
-  const [note, setNote] = useState<INote>(initialValue);
   const onSubmit = handleSubmit((data, e) => {
     e?.preventDefault();
     onSaveToLocal && onSaveToLocal(data);
   });
-
-  useEffect(() => {
-    setNote(initialValue);
-  }, [initialValue]);
-
-  useEffect(() => {
-    reset(note);
-  }, [note, reset]);
 
   return (
     <div className={"Note"}>
       <FormProvider {...methods}>
         <form onSubmit={onSubmit}>
           <h1>Create Note Fields</h1>
-          <TextField
-            label="name"
-            variant="outlined"
-            {...register("name", {
+          <Controller
+            control={control}
+            rules={{
               required: { value: true, message: "This field is requierd" },
               minLength: { value: 3, message: "Please enter 3 chars minmum" },
-            })}
+            }}
+            render={({ field }) => (
+              <TextArea field={field} errors={errors} label={"Name"} />
+            )}
+            name="name"
           />
-          <div className="error">
-            <ErrorMessage errors={errors} name="name" />
-          </div>
+
           <Fileds />
 
           <Button type="submit" variant="text">

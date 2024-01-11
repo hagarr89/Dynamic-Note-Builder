@@ -5,15 +5,11 @@ import { useState, useEffect } from "react";
 import useLocalStorage from "./hooks/useLocalStorage";
 
 function App() {
-  const [initialValue, setInitialValue] = useState<INote>({
-    name: null,
+  const init = {
+    name: "",
     fields: [],
-  });
-  const [storedValue, setValue] = useLocalStorage<INote>("note", initialValue);
-
-  useEffect(() => {
-    setInitialValue(storedValue);
-  }, [storedValue]);
+  };
+  const [storedValue, setValue] = useLocalStorage<INote>("note", init);
 
   const handelSaveToLocal = (note: INote) => {
     setValue(note);
@@ -21,10 +17,12 @@ function App() {
 
   return (
     <div className="App">
-      <NoteBuilder
-        initialValue={initialValue}
-        onSaveToLocal={handelSaveToLocal}
-      />
+      {storedValue ? (
+        <NoteBuilder
+          initialValue={storedValue}
+          onSaveToLocal={handelSaveToLocal}
+        />
+      ) : null}
     </div>
   );
 }

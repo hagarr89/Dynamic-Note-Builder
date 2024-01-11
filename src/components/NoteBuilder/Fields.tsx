@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { IFiled, FieldType } from ".";
 import Field from "./Field";
 import AddIcon from "@mui/icons-material/Add";
@@ -28,9 +27,7 @@ function Fields() {
           ))
         : null}
       <div
-        onClick={() =>
-          append({ key: null, title: null, type: FieldType.TextArea })
-        }
+        onClick={() => append({ key: "", title: "", type: FieldType.TextArea })}
         className="add"
       >
         <AddIcon /> Add Field

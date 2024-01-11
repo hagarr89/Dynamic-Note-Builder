@@ -1,12 +1,12 @@
-import { MenuItem, Select, TextField } from "@mui/material";
-import { FieldType, IFiled } from ".";
+import { FieldType, IFiled, optionsFileType } from ".";
 import Options from "./Options";
 
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { useFormContext, useWatch } from "react-hook-form";
+import { useFormContext, useWatch, Controller } from "react-hook-form";
+import TextArea from "../Inputes/TextArea";
+import SeclectField from "../Inputes/SeclectField";
 
 function Field({
-  field,
   indexField,
   onRemove,
 }: {
@@ -14,7 +14,10 @@ function Field({
   indexField: number;
   onRemove: () => void;
 }) {
-  const { register, control } = useFormContext(); // retrieve all hook methods
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext(); // retrieve all hook methods
 
   const fieldChnged = useWatch({
     control,
@@ -28,38 +31,40 @@ function Field({
   return (
     <div>
       <div className="Field">
-        <TextField
-          variant="outlined"
-          defaultValue={field?.key}
-          label={"key"}
-          {...register(`fields.${indexField}.key`, {
+        <Controller
+          control={control}
+          rules={{
             required: { value: true, message: "This field is requierd" },
-          })}
+          }}
+          render={({ field }) => (
+            <TextArea field={field} errors={errors} label="Key" />
+          )}
+          name={`fields.${indexField}.key`}
         />
-        <TextField
-          defaultValue={field?.title}
-          label={"title"}
-          variant="outlined"
-          {...register(`fields.${indexField}.title`, {
+        <Controller
+          control={control}
+          rules={{
             required: { value: true, message: "This field is requierd" },
-          })}
+          }}
+          render={({ field }) => (
+            <TextArea field={field} errors={errors} label="Title" />
+          )}
+          name={`fields.${indexField}.title`}
         />
-        <Select
-          defaultValue={field?.type}
-          placeholder={field?.type}
-          label="Type"
-          {...register(`fields.${indexField}.type`, {
-            required: { value: true, message: "This field is requierd" },
-          })}
-        >
-          <MenuItem value={FieldType["TextArea"]}>
-            {FieldType["TextArea"]}
-          </MenuItem>
-          <MenuItem value={FieldType["Radio"]}>{FieldType["Radio"]}</MenuItem>
-          <MenuItem value={FieldType["DropDown"]}>
-            {FieldType["DropDown"]}
-          </MenuItem>
-        </Select>
+        <Controller
+          name={`fields.${indexField}.type`}
+          control={control}
+          rules={{ required: "This field is requierd" }}
+          render={({ field }) => (
+            <SeclectField
+              field={field}
+              errors={errors}
+              label="Select"
+              options={optionsFileType}
+            />
+          )}
+          defaultValue="" // make sure to set up defaultValue
+        />
 
         <button className="remove" onClick={handelRemoveField}>
           <DeleteOutlineOutlinedIcon />

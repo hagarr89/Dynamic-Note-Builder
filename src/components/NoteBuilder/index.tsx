@@ -1,20 +1,16 @@
 import Note from "./Note";
 import "./index.scss";
+import { IOption } from "../Inputes/SeclectField";
 export interface INote {
-  name: string | null;
+  name: string;
   fields: IFiled[];
 }
 
 export interface IFiled {
-  key: string | null;
-  title: string | null;
+  key: string;
+  title: string;
   type: FieldType;
   options?: IOption[];
-}
-
-export interface IOption {
-  label: string | null;
-  value: string | null;
 }
 
 export enum FieldType {
@@ -22,5 +18,13 @@ export enum FieldType {
   DropDown = "dropdown",
   Radio = "radio",
 }
+const FileType = Object.entries(FieldType);
+export const optionsFileType = FileType?.map(([key, value]) => {
+  return {
+    label: key,
+    value: value,
+  };
+});
+console.log("optionsFileType", optionsFileType);
 
 export default Note;
